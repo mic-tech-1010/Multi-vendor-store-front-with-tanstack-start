@@ -1,0 +1,430 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap');
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* AMAZON-STYLE SHADCN THEME */
+
+  --background: #eaeded;
+  --foreground: #0f1111;
+
+  --link: #ffffff;
+
+  --card: #ffffff;
+  --card-foreground: #0f1111;
+
+  --popover: #ffffff;
+  --popover-foreground: #0f1111;
+
+  --primary: #131921;
+  --primary-foreground: #ffffff;
+  
+  --secondary: #232f3e;
+  --secondary-foreground: #ffffff;
+
+  --accent: #febd69;
+  --accent-foreground: #111111;
+
+  --muted: #f3f3f3;
+  --muted-foreground: #565959;
+
+  --destructive: #b12704;
+  --destructive-foreground: #ffffff;
+
+  --border: #d5d9d9;
+  --input: #d5d9d9;
+  --ring: #f3a847;
+
+  --chart-1: #febd69;
+  --chart-2: #146eb4;
+  --chart-3: #232f3e;
+  --chart-4: #ff9900;
+  --chart-5: #37475a;
+
+  --radius: 0.625rem;
+
+  --sidebar: #131921;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #febd69;
+  --sidebar-primary-foreground: #111111;
+  --sidebar-accent: #232f3e;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-ring: #febd69;
+
+  /* LEGACY TOKENS REMAPPED TO SHADCN */
+
+  --sea-ink: var(--foreground);
+  --sea-ink-soft: var(--muted-foreground);
+
+  --lagoon: var(--accent);
+  --lagoon-deep: #f3a847;
+
+  --palm: var(--secondary);
+
+  --sand: var(--background);
+  --foam: #f7f8f8;
+
+  --surface: rgba(255, 255, 255, 0.82);
+  --surface-strong: rgba(255, 255, 255, 0.96);
+
+  --line: rgba(15, 17, 17, 0.12);
+
+  --inset-glint: rgba(255, 255, 255, 0.92);
+
+  --kicker: var(--accent);
+
+  --bg-base: var(--background);
+
+  --header-bg: rgba(19, 25, 33, 0.96);
+
+  --chip-bg: rgba(255, 255, 255, 0.94);
+  --chip-line: rgba(15, 17, 17, 0.12);
+
+  --link-bg-hover: rgba(255, 255, 255, 0.96);
+
+  --hero-a: rgba(255, 153, 0, 0.12);
+  --hero-b: rgba(35, 47, 62, 0.1);
+}
+
+.dark {
+  --background: #0f1111;
+  --foreground: #f3f3f3;
+
+  --link: #ffffff;
+
+  --card: #1a1d1d;
+  --card-foreground: #f3f3f3;
+
+  --popover: #1a1d1d;
+  --popover-foreground: #f3f3f3;
+
+  --primary: #232f3e;
+  --primary-foreground: #ffffff;
+
+  --secondary: #37475a;
+  --secondary-foreground: #ffffff;
+
+  --accent: #febd69;
+  --accent-foreground: #111111;
+
+  --muted: #232f3e;
+  --muted-foreground: #c7c7c7;
+
+  --destructive: #d13212;
+  --destructive-foreground: #ffffff;
+
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.12);
+  --ring: #febd69;
+
+  --chart-1: #febd69;
+  --chart-2: #5aa9e6;
+  --chart-3: #37475a;
+  --chart-4: #ff9900;
+  --chart-5: #7d8998;
+
+  --sidebar: #131921;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #febd69;
+  --sidebar-primary-foreground: #111111;
+  --sidebar-accent: #232f3e;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-ring: #febd69;
+
+  /* LEGACY TOKENS REMAPPED */
+
+  --sea-ink: var(--foreground);
+  --sea-ink-soft: var(--muted-foreground);
+
+  --lagoon: var(--accent);
+  --lagoon-deep: #ffb84d;
+
+  --palm: var(--secondary);
+
+  --sand: var(--background);
+  --foam: #161919;
+
+  --surface: rgba(26, 29, 29, 0.88);
+  --surface-strong: rgba(20, 22, 22, 0.96);
+
+  --line: rgba(255, 255, 255, 0.08);
+
+  --inset-glint: rgba(255, 255, 255, 0.04);
+
+  --kicker: var(--accent);
+
+  --bg-base: var(--background);
+
+  --header-bg: rgba(19, 25, 33, 0.98);
+
+  --chip-bg: rgba(35, 47, 62, 0.88);
+  --chip-line: rgba(255, 255, 255, 0.08);
+
+  --link-bg-hover: rgba(35, 47, 62, 0.96);
+
+  --hero-a: rgba(255, 153, 0, 0.08);
+  --hero-b: rgba(254, 189, 105, 0.06);
+}
+
+@theme inline {
+  --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+   /*|| Breakpoint */
+  --breakpoint-tablet: 47.5rem;
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--sea-ink);
+  font-family: var(--font-sans);
+  background-color: var(--bg-base);
+  background:
+    radial-gradient(1100px 620px at -8% -10%, var(--hero-a), transparent 58%),
+    radial-gradient(1050px 620px at 112% -12%, var(--hero-b), transparent 62%),
+    radial-gradient(720px 380px at 50% 115%, rgba(255, 153, 0, 0.06), transparent 68%),
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--sand) 72%, white) 0%,
+      var(--foam) 44%,
+      var(--bg-base) 100%
+    );
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.22;
+  background:
+    radial-gradient(circle at 20% 15%, rgba(255, 255, 255, 0.9), transparent 34%),
+    radial-gradient(circle at 78% 26%, rgba(255, 153, 0, 0.08), transparent 42%),
+    radial-gradient(circle at 42% 82%, rgba(35, 47, 62, 0.08), transparent 36%);
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.08;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(circle at 50% 30%, black, transparent 78%);
+}
+
+a {
+  color: var(--link);
+  text-decoration-color: rgba(254, 189, 105, 0.4);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  color: var(--link);
+}
+
+code {
+  font-size: 0.9em;
+  border: 1px solid var(--line);
+  background: color-mix(in oklab, var(--surface-strong) 82%, white 18%);
+  border-radius: 7px;
+  padding: 2px 7px;
+}
+
+pre code {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+  color: inherit;
+}
+
+.prose pre {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #131921;
+  color: #f3f3f3;
+}
+
+.page-wrap {
+  width: min(1080px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.display-title {
+  font-family: 'Fraunces', Georgia, serif;
+}
+
+.island-shell {
+  border: 1px solid var(--line);
+  background: linear-gradient(165deg, var(--surface-strong), var(--surface));
+  box-shadow:
+    0 1px 0 var(--inset-glint) inset,
+    0 12px 30px rgba(15, 17, 17, 0.08),
+    0 4px 10px rgba(15, 17, 17, 0.04);
+  backdrop-filter: blur(4px);
+}
+
+.feature-card {
+  background: linear-gradient(
+    165deg,
+    color-mix(in oklab, var(--surface-strong) 93%, white 7%),
+    var(--surface)
+  );
+  box-shadow:
+    0 1px 0 var(--inset-glint) inset,
+    0 10px 24px rgba(15, 17, 17, 0.08),
+    0 3px 8px rgba(15, 17, 17, 0.05);
+}
+
+.feature-card:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in oklab, var(--accent) 45%, var(--line));
+}
+
+button,
+.island-shell,
+a {
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+
+.island-kicker {
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 0.69rem;
+  color: var(--kicker);
+}
+
+.nav-link {
+  position: relative;
+  text-decoration: none;
+  color: var(--sea-ink-soft);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -8px;
+  width: 100%;
+  height: 2px;
+  transform: scaleX(0);
+  transform-origin: left;
+  background: linear-gradient(90deg, var(--accent), #ff9900);
+  transition: transform 170ms ease;
+}
+
+.nav-link:hover,
+.nav-link.is-active {
+  color: var(--sea-ink);
+}
+
+.nav-link:hover::after,
+.nav-link.is-active::after {
+  transform: scaleX(1);
+}
+
+.rise-in {
+  animation: rise-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.site-footer {
+  border-top: 1px solid var(--line);
+  background: color-mix(in oklab, var(--header-bg) 84%, transparent 16%);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+}
