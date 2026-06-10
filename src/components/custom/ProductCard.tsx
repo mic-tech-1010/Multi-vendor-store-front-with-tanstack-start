@@ -1,3 +1,5 @@
+import { Link } from "@tanstack/react-router";
+
 export default function ProductCard({
   product,
   layout,
@@ -6,7 +8,10 @@ export default function ProductCard({
   layout: string;
 }) {
   return (
-    <a href={`/product/${product.slug}`} className="h-full flex flex-col">
+    <Link to="/products/$slug"
+      params={{ slug: product.slug }}
+      className="h-full flex flex-col"
+    >
       <img
         src={product.images?.[0]?.imageUrl}
         className="w-full aspect-square object-cover"
@@ -18,6 +23,6 @@ export default function ProductCard({
         </p>
       )}
 
-    </a>
+    </Link>
   );
 }

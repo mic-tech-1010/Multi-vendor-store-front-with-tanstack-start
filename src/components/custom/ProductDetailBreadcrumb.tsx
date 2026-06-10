@@ -1,4 +1,4 @@
-import { Link } from "@inertiajs/react";
+import { Link } from "@tanstack/react-router";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,21 +7,25 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { Product } from "@/types";
+import type { Product } from "@/types";
 
 export function ProductDetailBreadcrumb({product}: {product: Product}) {
   return (
-    <Breadcrumb>
+    <Breadcrumb className="mb-8">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
-            <Link href="">{product.department?.name}</Link>
+            <Link to="/" className=" text-foreground!">
+              {product.department?.name}
+            </Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
-            <Link href="">{product.category?.name}</Link>
+            <Link to="/" className=" text-foreground!">
+              {product.category?.name}
+            </Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />

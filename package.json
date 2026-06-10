@@ -15,6 +15,8 @@
     "check": "prettier --check ."
   },
   "dependencies": {
+    "@lexical/headless": "^0.45.0",
+    "@lexical/html": "^0.45.0",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-devtools": "latest",
     "@tanstack/react-router": "latest",

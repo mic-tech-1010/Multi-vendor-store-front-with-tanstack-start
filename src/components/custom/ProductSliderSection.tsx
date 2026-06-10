@@ -7,7 +7,6 @@ import {
 } from "@/components/ui/carousel"
 import { Link } from "@tanstack/react-router";
 
-
 function ProductSlider({ section }: { section: any }) {
     return (
         <div className="overflow-hidden my-6 bg-white mx-0 sm:mx-4 font-semibold">
@@ -69,7 +68,10 @@ function GridItem({ item }: { item: any }) {
 
 function ProductLink({ product }: { product: any }) {
     return (
-        <Link to="/product-details" className="flex h-full">
+        <Link to="/products/$slug"
+            params={{ slug: product.slug }}
+            className="flex h-full"
+        >
             <img src={product.images?.[0]?.imageUrl} alt={product.slug} className="object-contain max-h-full w-full" />
         </Link>
     );
