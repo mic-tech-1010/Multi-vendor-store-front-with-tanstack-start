@@ -11,9 +11,9 @@ export default function ProductVariationSelector({
   chooseOption,
   setPreviewImages,
 }: {
-  product: Product, 
-  selectedOptions: any, 
-  chooseOption: any, 
+  product: Product,
+  selectedOptions: any,
+  chooseOption: any,
   setPreviewImages: any
 }) {
 
@@ -39,7 +39,7 @@ export default function ProductVariationSelector({
 
                     const isActive =
                       selectedOptions[
-                        attribute.id
+                      attribute.id
                       ] === value.id;
 
                     return (
@@ -76,10 +76,9 @@ export default function ProductVariationSelector({
 
                           className={`
                             w-16 border-2 cursor-pointer
-                            ${
-                              isActive
-                                ? 'border-blue-500'
-                                : 'border-gray-300'
+                            ${isActive
+                              ? 'border-blue-500'
+                              : 'border-gray-300'
                             }
                           `}
                         />
@@ -101,40 +100,31 @@ export default function ProductVariationSelector({
 
                     const isChecked =
                       selectedOptions[
-                        attribute.id
+                      attribute.id
                       ] === value.id;
 
                     return (
                       <Button
+                        variant={"default"}
                         key={value.id}
-
-                        variant="outline"
-
-                        className={
-                          isChecked
-                            ? 'bg-blue-600 text-white'
-                            : ''
-                        }
+                        tabIndex={0}
+                        className={`relative rounded-none border
+                                    ${isChecked
+                            ? "bg-blue-600 text-white border-blue-600 hover:bg-blue-500"
+                            : "bg-white text-gray-900 border-gray-300 hover:bg-gray-100"
+                          }`}
                       >
                         {value.value}
-
                         <Input
-                          type="radio"
-
-                          checked={isChecked}
-
                           onChange={() =>
-                            chooseOption(
-                              attribute.id,
-                              value.id
-                            )
+                            chooseOption(attribute.id, value.id)
                           }
-
-                          className="
-                            absolute
-                            inset-0
-                            opacity-0
-                          "
+                          className="absolute opacity-0 h-full w-full"
+                          value={value.id}
+                          type="radio"
+                          checked={isChecked}
+                          name={"variation_type_" + attribute.id}
+                          aria-label={value.value}
                         />
                       </Button>
                     );

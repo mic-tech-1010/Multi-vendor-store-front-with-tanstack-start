@@ -7,21 +7,23 @@ import {
     DropdownMenuTrigger,
     DropdownMenuArrow,
 } from "@/components/ui/dropdown-menu"
-
 import {
     Card,
     CardContent,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-
 import { ChevronDown, UserCircle2 } from 'lucide-react'
 import { useState } from "react"
 import { Button } from "../ui/button"
 import { Separator } from "../ui/separator"
 import { Link } from '@tanstack/react-router'
+import { authClient } from "#/lib/auth-client";
+import { toast } from "sonner"
 
 function AccountTab() {
+    
+    const {data: session, isPending: loading} = authClient.useSession();
     const [open, setOpen] = useState(false)
 
     return (
@@ -36,12 +38,12 @@ function AccountTab() {
                 <div className='flex gap-0.5 justify-between items-end hover:outline-solid! hover:outline-offset-3! hover:outline-ring! hover:outline-1 mr-0.5'>
 
                     <Link
-                        to={"/"}
+                        to="/login"
                         className="text-left leading-[1.1] text-link"
                     >
                         <span className="text-[13px] text-link/90">
                             Hello,
-                            {' Sign in'}
+                            {session?.user ? ` ${session.user.name}` : " Sign in"}
                         </span>
 
                         <span className="block text-base font-medium text-link">
@@ -67,7 +69,7 @@ function AccountTab() {
 
                     <DropdownMenuArrow className="fill-popover" />
 
-                    {1 + 1 === 2
+                    {session?.user
                         ? (
                             <Card className="py-0 px-3 bg-muted border-border shadow-none">
 
@@ -87,12 +89,12 @@ function AccountTab() {
                                         />
 
                                         <p className="leading-3">
-                                            <span className="block text-[0.9375rem] font-semibold text-foreground">
-                                                {'name'}
+                                            <span className="block text-[0.9375rem] font-semibold">
+                                                {session?.user?.name}
                                             </span>
 
-                                            <span className="text-sm text-muted-foreground">
-                                                {'email'}
+                                            <span className="text-sm">
+                                                {session?.user?.email}
                                             </span>
                                         </p>
 
@@ -101,18 +103,21 @@ function AccountTab() {
                                     <div className="flex items-center gap-2 text-sm">
 
                                         <Link
-                                            to={"/"}
-                                            className="hover:underline text-primary"
+                                            to="/login"
+                                            className="hover:underline"
                                         >
                                             Switch Accounts
                                         </Link>
 
-                                        <Link
-                                            to={"/"}
-                                            className="hover:underline text-primary cursor-pointer"
+                                        <Button
+                                            variant="outline"
+                                            onClick={() => 
+                                                (authClient.signOut(), toast.success("Signed out successfully"))
+                                            }
+                                            className="hover:underline cursor-pointer"
                                         >
                                             Sign Out
-                                        </Link>
+                                        </Button>
 
                                     </div>
 
@@ -126,20 +131,20 @@ function AccountTab() {
 
                                     <Button
                                         asChild
-                                        className="bg-primary text-primary-foreground text-sm px-16 py-1 hover:bg-primary/90"
+                                        className="bg-primary text-sm px-16 py-1 hover:bg-primary/90"
                                     >
-                                        <Link to={"/"} className="hover:underline">
+                                        <Link to="/login" className="hover:underline">
                                             Sign In
                                         </Link>
                                     </Button>
 
-                                    <div className="text-center text-xs text-muted-foreground">
+                                    <div className="text-center text-xs">
                                         New customer?{' '}
 
                                         <Link
-                                            to={"/"}
+                                            to="/signup"
                                             tabIndex={5}
-                                            className="text-primary hover:underline"
+                                            className=" hover:underline"
                                         >
                                             Start here
                                         </Link>
@@ -156,7 +161,7 @@ function AccountTab() {
 
                         <DropdownMenuGroup className="flex-1">
 
-                            <DropdownMenuLabel className="font-bold text-lg text-foreground">
+                            <DropdownMenuLabel className="font-bold text-lg">
                                 Your List
                             </DropdownMenuLabel>
 
@@ -172,7 +177,7 @@ function AccountTab() {
                             ].map(({ label }) => (
                                 <DropdownMenuItem
                                     key={label}
-                                    className="text-sm leading-3 text-muted-foreground focus:text-foreground"
+                                    className="text-sm leading-3 focus:text-foreground"
                                     asChild
                                 >
                                     <Link to={"/"} className="cursor-pointer">
@@ -192,7 +197,7 @@ function AccountTab() {
 
                             <DropdownMenuGroup>
 
-                                <DropdownMenuLabel className="font-bold text-lg text-foreground">
+                                <DropdownMenuLabel className="font-bold text-lg">
                                     Your Account
                                 </DropdownMenuLabel>
 
@@ -224,7 +229,7 @@ function AccountTab() {
                                 ].map(({ label }) => (
                                     <DropdownMenuItem
                                         key={label}
-                                        className="text-sm leading-3 text-muted-foreground focus:text-foreground"
+                                        className="text-sm leading-3 focus:text-foreground"
                                         asChild
                                     >
                                         <Link to={"/"} className="cursor-pointer">

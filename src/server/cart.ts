@@ -7,7 +7,7 @@ export async function addToCart(input: {
   quantity: number;
 }) {
 
-  return api('/public/cart', {
+  return api('/public/cart/items', {
     method: 'POST',
 
     body: JSON.stringify(input),

@@ -8,6 +8,8 @@ import HamburgerMenu from '@/components/custom/HamburgerMenu';
 import { ChevronRight, ShoppingCart, User } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
 import ThemeToggle from './ThemeToggle';
+import { authClient } from '#/lib/auth-client';
+import { toast } from 'sonner';
 
 const menuItems = [
     { label: "Today's Deals", href: "#" },
@@ -25,7 +27,9 @@ const menuItems = [
 function Header() {
     const isTablet = useMediaQuery("(min-width: 760px)")
     const isDesktop = useMediaQuery("(min-width: 1024px)")
-   
+
+    const { data: session, isPending: loading } = authClient.useSession();
+
     return (
 
         <header className='overflow-hidden'>
@@ -69,23 +73,49 @@ function Header() {
 
                         {/* start sign in tab (is different for mobile and other viewport) */}
 
-                        {!isDesktop && (
-                            <a
-                                href=""
-                                className="flex items-start text-foreground"
-                                aria-label="sign in to your account"
-                            >
-                                {!isTablet && (
-                                    <div className="flex items-center gap-px">
-                                        <span className="text-[14px]">Sign in</span>
-                                        <ChevronRight size={10} />
-                                    </div>
-                                )}
-                                <User />
-                            </a>
+                        {!isDesktop ? (
+                            session?.user ? (
+                                <div className="flex items-center gap-0! text-left leading-[1.1] ">
+
+                                    {isTablet && (
+                                        <Button
+                                            variant="ghost"
+                                            onClick={() => (authClient.signOut(), toast.success("Signed out successfully"))}
+                                            className="text-[14px] cursor-pointer text-white hover:underline"
+                                        >
+                                            <span className="text-[14px]">
+                                                Sign out
+                                            </span>
+                                            <ChevronRight size={10} />
+                                            <User />
+                                        </Button>
+                                    )}
+
+                                </div>
+                            ) :
+                                (
+
+                                    <Link
+                                        to="/login"
+                                        className="flex items-start text-foreground"
+                                        aria-label="sign in to your account"
+                                    >
+                                        {!isTablet && (
+                                            <div className="flex items-center gap-px">
+                                                <span className="text-[14px]">
+                                                    Sign in
+                                                </span>
+                                                <ChevronRight size={10} />
+                                            </div>
+                                        )}
+                                        <User />
+                                    </Link>
+
+                                )
+                        ) : (
+                            <AccountTab />
                         )}
 
-                        {isDesktop && <AccountTab />}
 
                         {/** end sign in tab */}
 
@@ -157,9 +187,9 @@ function Header() {
 
                 {/*|| bottom Nav ends here */}
 
-            </nav>
+            </nav >
 
-        </header>
+        </header >
 
     )
 }

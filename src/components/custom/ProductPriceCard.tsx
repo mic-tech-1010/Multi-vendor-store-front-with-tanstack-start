@@ -41,6 +41,13 @@ export default function ProductPriceCard({
 
   const handleAddToCart = async () => {
 
+
+    console.log('Adding to cart:', {
+      productId: product.id,
+      skuId: selectedSku?.id ?? null,
+      quantity,
+    });
+    
     await addToCart({
       productId: product.id,
 

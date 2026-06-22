@@ -6,7 +6,6 @@ import {
   getProductBySlug,
 } from '#/server/products';
 import {
-  useEffect,
   useMemo,
   useState,
 } from 'react';
@@ -16,6 +15,7 @@ import type { Image, ProductAttributeValue } from '#/types';
 export const Route = createFileRoute(
   '/products/$slug'
 )({
+
   loader: async ({ params }) => {
 
     const productQuery =
@@ -42,35 +42,6 @@ function ProductDetailsPage() {
 
   const [previewImages, setPreviewImages] =
     useState<Image[] | null>(null);
-
-  /*
-  |--------------------------------------------------------------------------
-  | AUTO SELECT FIRST OPTIONS
-  |--------------------------------------------------------------------------
-  */
-
-  // useEffect(() => {
-
-  //   if (!product?.attributes?.length) {
-  //     return;
-  //   }
-
-  //   setSelectedOptions((prev) => {
-  //     // don't override if already selected
-  //     if (Object.keys(prev).length > 0) return prev;
-
-  //     const defaults: Record<number, ProductAttributeValue> = {};
-
-  //     product.attributes.forEach((attr) => {
-  //       if (attr.values?.length) {
-  //         defaults[attr.id] = attr.values[0];
-  //       }
-  //     });
-
-  //     return defaults;
-  //   });
-
-  // }, [product]);
 
   /*
   |--------------------------------------------------------------------------
@@ -117,7 +88,7 @@ function ProductDetailsPage() {
 
       const selectedValueId =
         selectedOptions[attribute.id];
- 
+
       const selectedValue =
         attribute.values.find(
           (v: any) => v.id === selectedValueId
@@ -175,14 +146,6 @@ function ProductDetailsPage() {
         ...prev,
         [attributeId]: valueId,
       };
-
-      navigate({
-        search: {
-          options: updated,
-        },
-
-        replace: true,
-      });
 
       return updated;
     });
