@@ -79,7 +79,16 @@ export interface Product {
     skus: Sku[];
 }
 
+export interface Cart {
+    cartId: number;
+    items: CartItem[];
+    itemCount: number;
+    subtotal: number;
+}
+
 export type ProductQuery = ApiResponse<Product>;
+
+export type CartQuery = ApiResponse<Cart>;
 
 export interface Section {
     id: number;

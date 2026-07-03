@@ -40,7 +40,7 @@ export default function ProductVariationSelector({
                     const isActive =
                       selectedOptions[
                       attribute.id
-                      ] === value.id;
+                      ].id === value.id;
 
                     return (
                       <div
@@ -49,7 +49,7 @@ export default function ProductVariationSelector({
                         onClick={() =>
                           chooseOption(
                             attribute.id,
-                            value.id
+                            value
                           )
                         }
 
@@ -101,7 +101,7 @@ export default function ProductVariationSelector({
                     const isChecked =
                       selectedOptions[
                       attribute.id
-                      ] === value.id;
+                      ].id === value.id;
 
                     return (
                       <Button
@@ -117,7 +117,7 @@ export default function ProductVariationSelector({
                         {value.value}
                         <Input
                           onChange={() =>
-                            chooseOption(attribute.id, value.id)
+                            chooseOption(attribute.id, value)
                           }
                           className="absolute opacity-0 h-full w-full"
                           value={value.id}

@@ -18,12 +18,12 @@ export const Route = createFileRoute(
 
   loader: async ({ params }) => {
 
-    const productQuery =
-      await getProductBySlug(params.slug);
+    const productQuery = await getProductBySlug({ data: { slug: params.slug } });
 
     return {
       product: productQuery.data,
     };
+    
   },
 
   component: ProductDetailsPage,
@@ -34,11 +34,24 @@ function ProductDetailsPage() {
   const { product } =
     Route.useLoaderData();
 
-  const navigate =
-    Route.useNavigate();
+
+  // const navigate =
+  //   Route.useNavigate();
 
   const [selectedOptions, setSelectedOptions] =
-    useState<Record<number, ProductAttributeValue>>({});
+    useState<Record<number, ProductAttributeValue>>(() => {
+      const defaults: Record<number, ProductAttributeValue> = {};
+
+      if (product?.attributes?.length) {
+        product.attributes.forEach((attr) => {
+          if (attr.values?.length) {
+            defaults[attr.id] = attr.values[0];
+          }
+        });
+      };
+
+      return defaults
+    });
 
   const [previewImages, setPreviewImages] =
     useState<Image[] | null>(null);
@@ -52,19 +65,21 @@ function ProductDetailsPage() {
   const selectedSku = useMemo(() => {
 
     const selectedIds =
-      Object.values(selectedOptions).sort();
+      Object.values(selectedOptions)
+        .map((option) => option.id)
+        .sort();
 
     for (const sku of product?.skus) {
 
       const skuIds =
         sku.attributeValues
-          .map((v: any) => v.id)
+          .map((value) => value.id)
           .sort();
 
       const matches =
         selectedIds.length === skuIds.length &&
-        selectedIds.every(
-          (id, i) => id === skuIds[i]
+        skuIds.every(
+          (id, i) => id === selectedIds[i]
         );
 
       if (matches) {
@@ -87,7 +102,7 @@ function ProductDetailsPage() {
     for (const attribute of product.attributes) {
 
       const selectedValueId =
-        selectedOptions[attribute.id];
+        selectedOptions[attribute.id].id;
 
       const selectedValue =
         attribute.values.find(
@@ -135,7 +150,7 @@ function ProductDetailsPage() {
 
   const chooseOption = (
     attributeId: number,
-    valueId: number
+    value: ProductAttributeValue
   ) => {
 
     setPreviewImages(null);
@@ -144,7 +159,7 @@ function ProductDetailsPage() {
 
       const updated = {
         ...prev,
-        [attributeId]: valueId,
+        [attributeId]: value,
       };
 
       return updated;
@@ -178,7 +193,7 @@ function ProductDetailsPage() {
           />
 
           <div
-            className="prose max-w-none"
+            className="prose max-w-none dark:text-white!"
             dangerouslySetInnerHTML={{
               __html: product.descriptionHtml
             }}

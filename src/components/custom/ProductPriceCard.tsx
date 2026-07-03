@@ -1,31 +1,27 @@
-
 import {
   Card,
   CardContent,
 } from '#/components/ui/card';
-
 import {
   NativeSelect,
   NativeSelectOption,
 } from '#/components/ui/native-select';
-
 import { Button }
   from '#/components/ui/button';
-
 import {
   useState,
 } from 'react';
-
 import CurrencyFormatter from '#/components/CurrencyFormatter';
-
-import {
-  addToCart,
-} from '#/server/cart';
+import { toast } from 'sonner';
+import { useAddToCartMutation } from '#/hooks/useCart';
 
 export default function ProductPriceCard({
   product,
   selectedSku,
 }: any) {
+
+
+  const addToCartMutation = useAddToCartMutation();
 
   const [quantity, setQuantity] =
     useState(1);
@@ -41,20 +37,13 @@ export default function ProductPriceCard({
 
   const handleAddToCart = async () => {
 
-
-    console.log('Adding to cart:', {
+    const response = await addToCartMutation.mutateAsync({
       productId: product.id,
       skuId: selectedSku?.id ?? null,
-      quantity,
+      quantity: quantity,
     });
-    
-    await addToCart({
-      productId: product.id,
 
-      skuId: selectedSku?.id ?? null,
-
-      quantity,
-    });
+    toast.success(response?.message)
 
   };
 

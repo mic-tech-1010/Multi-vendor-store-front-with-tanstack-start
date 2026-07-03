@@ -1,33 +1,29 @@
-
-const API_URL = "http://localhost:4000";
+const API_URL = 'http://localhost:4000';
 
 export async function api<T>(
   endpoint: string,
-  options?: RequestInit
+ options?: RequestInit
 ): Promise<T> {
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(options?.headers ?? {}),
+    },
+    ...options,
+  });
 
-  const response = await fetch(
-    `${API_URL}${endpoint}`,
-    {
-      credentials: 'include',
+  let json: any = null;
 
-      headers: {
-        'Content-Type': 'application/json',
-        ...(options?.headers ?? {}),
-      },
-
-      ...options,
-    }
-  );
-
-  if (!response.ok) {
-
-    const error = await response.json();
-
-    throw new Error(
-      error.message || 'Request failed'
-    );
+  try {
+    json = await response.json();
+  } catch {
+    json = null;
   }
 
-  return response.json();
+  if (!response.ok) {
+    throw new Error(json?.message || 'Request failed');
+  }
+
+  return json as T;
 }

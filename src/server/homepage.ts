@@ -1,16 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
+import { api } from "./api";
 
-const API_URL = "http://localhost:4000";
-const BASE_URL = `${API_URL}/public/homepage`;
 
-export const getHomepageGroups = createServerFn({ method: "GET" }).handler(async () => {
-  const res = await fetch(BASE_URL);
-   
-  if (!res.ok) {
-    throw new Error("Failed to fetch homepage data");
+export const getHomepageGroups = createServerFn({ method: 'GET' }).handler(
+  async () => {
+    const response = await api<{ data: any[] }>('/public/homepage');
+    return response.data;
   }
-
-  const json = await res.json();
-
-  return json.data;
-});
+);

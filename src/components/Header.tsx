@@ -10,6 +10,7 @@ import { Link } from '@tanstack/react-router'
 import ThemeToggle from './ThemeToggle';
 import { authClient } from '#/lib/auth-client';
 import { toast } from 'sonner';
+import { useCartQuery } from '#/hooks/useCart';
 
 const menuItems = [
     { label: "Today's Deals", href: "#" },
@@ -29,7 +30,9 @@ function Header() {
     const isDesktop = useMediaQuery("(min-width: 1024px)")
 
     const { data: session, isPending: loading } = authClient.useSession();
+    const { data: cart, isLoading: isCartLoading } = useCartQuery();
 
+    const itemCount = cart?.data?.itemCount ?? 0;
     return (
 
         <header className='overflow-hidden'>
@@ -141,9 +144,11 @@ function Header() {
                         >
                             <div className="relative bg">
                                 <ShoppingCart size={isTablet ? '28' : '24'} />
-                                <span className="absolute top-[-40%] left-1/2 text-[14px] text-link font-semibold">
-                                    {0}
-                                </span>
+                                {!isCartLoading && itemCount > 0 && (
+                                    <span className="absolute top-[-40%] left-1/2 text-[14px] text-link font-semibold">
+                                        {itemCount}
+                                    </span>
+                                )}
                             </div>
 
                             <span className='w-3.75 font-bold hidden xl:inline'>

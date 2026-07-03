@@ -55,7 +55,7 @@ export const Route = createFileRoute('/login')({
                     onSuccess: async () => {
                      await authClient.getSession();
                      toast.success("Signed in successfully")
-                      console.log("success")
+
                     }
                 }
             )

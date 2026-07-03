@@ -1,10 +1,9 @@
-
+import { createServerFn } from '@tanstack/react-start';
 import type { ProductQuery } from '#/types';
 import { api } from './api';
 
-export async function getProductBySlug(
-  slug: string
-): Promise<ProductQuery> {
-
-  return api(`/public/products/${slug}`);
-}
+export const getProductBySlug = createServerFn({ method: 'GET' })
+  .inputValidator((data: { slug: string }) => data)
+  .handler(async ({ data }): Promise<ProductQuery> => {
+    return api<ProductQuery>(`/public/products/${data.slug}`);
+  });
