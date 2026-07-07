@@ -18,14 +18,11 @@ export default function ProductVariationSelector({
 }) {
 
   return (
-    <div className="space-y-6">
-
+    <div className="space-y-5">
       {product.attributes.map(
         (attribute: ProductAttribute) => (
-
-          <div key={attribute.id}>
-
-            <b className="block mb-3">
+          <div key={attribute.id} className="space-y-3">
+            <b className="block text-sm font-semibold uppercase tracking-wide text-foreground/90">
               {attribute.name}
             </b>
 
@@ -45,7 +42,7 @@ export default function ProductVariationSelector({
                     return (
                       <div
                         key={value.id}
-
+                        className="rounded-xl border border-border/70 p-1 transition-colors"
                         onClick={() =>
                           chooseOption(
                             attribute.id,
@@ -75,10 +72,10 @@ export default function ProductVariationSelector({
                           alt={value.value}
 
                           className={`
-                            w-16 border-2 cursor-pointer
+                            h-16 w-16 cursor-pointer rounded-lg object-cover transition-all sm:h-20 sm:w-20
                             ${isActive
-                              ? 'border-blue-500'
-                              : 'border-gray-300'
+                              ? 'border-2 border-primary shadow-sm'
+                              : 'border border-border/70 hover:border-primary/60'
                             }
                           `}
                         />
@@ -108,10 +105,10 @@ export default function ProductVariationSelector({
                         variant={"default"}
                         key={value.id}
                         tabIndex={0}
-                        className={`relative rounded-none border
+                        className={`relative rounded-full border px-4 py-2 text-sm font-medium transition-colors
                                     ${isChecked
-                            ? "bg-blue-600 text-white border-blue-600 hover:bg-blue-500"
-                            : "bg-white text-gray-900 border-gray-300 hover:bg-gray-100"
+                            ? "border-primary bg-primary text-primary-foreground hover:bg-primary/90"
+                            : "border-border bg-background text-foreground hover:bg-accent hover:text-accent-foreground"
                           }`}
                       >
                         {value.value}

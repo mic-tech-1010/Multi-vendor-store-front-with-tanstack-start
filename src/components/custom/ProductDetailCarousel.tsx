@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react"
 import useEmblaCarousel from "embla-carousel-react"
-import type {  EmblaOptionsType } from "embla-carousel"
+import type { EmblaOptionsType } from "embla-carousel"
 import type { Image } from "#/types"
 
 type CarouselPropType = {
@@ -16,7 +16,7 @@ type ThumbPropType = {
     onHover: () => void
 }
 
-const OPTIONS = {
+const OPTIONS: EmblaOptionsType = {
     containScroll: "trimSnaps",
 }
 
@@ -67,10 +67,11 @@ const Carousel: React.FC<CarouselPropType> = ({ images, thumbNails }) => {
     }, [images, thumbNails])
 
     return (
-        <div className="flex max-w-4xl h-112.5 gap-0.25">
+        <div className="flex w-full flex-col gap-3 sm:flex-row sm:gap-4">
+            
             {/* Thumbnails */}
-            <div className="w-20 overflow-hidden" ref={emblaThumbsRef}>
-                <div className="flex flex-col gap-3 h-full">
+            <div className="order-2 overflow-x-auto sm:order-1 lg:w-20 lg:overflow-hidden" ref={emblaThumbsRef}>
+                <div className="flex gap-2 lg:flex-col lg:gap-3">
                     {thumbNails.map((image, index) => (
                         <Thumb
                             key={index}
@@ -84,17 +85,17 @@ const Carousel: React.FC<CarouselPropType> = ({ images, thumbNails }) => {
             </div>
 
             {/* Main Carousel */}
-            <div className="flex-1 overflow-hidden rounded-none bg-white" ref={emblaMainRef}>
-                <div className="flex h-full">
+            <div className="order-1 flex-1 overflow-hidden rounded-2xl border border-border/60 bg-muted/30 p-2 shadow-sm sm:p-3 lg:order-2" ref={emblaMainRef}>
+                <div className="flex h-80 sm:h-105 lg:h-140">
                     {images.map((image, index) => (
                         <div
                             key={index}
-                            className="flex-[0_0_100%] h-full flex items-center justify-center"
+                            className="flex-[0_0_100%] flex h-full justify-center"
                         >
                             <img
                                 src={image.imageUrl}
                                 alt={image.imageAltText}
-                                className="max-w-full max-h-full object-contain"
+                                className="max-h-full max-w-full object-cover"
                             />
                         </div>
                     ))}
@@ -115,8 +116,8 @@ const Thumb: React.FC<ThumbPropType> = ({
             onMouseEnter={onHover}
             onClick={onClick}
             className={`
-        cursor-pointer w-12 h-12 overflow-hidden rounded-xl border transition
-        ${selected ? "border-black" : "border-gray-300 opacity-60"}
+        h-14 w-14 shrink-0 overflow-hidden rounded-xl border bg-background transition-all sm:h-16 sm:w-16
+        ${selected ? "border-primary shadow-sm" : "border-border/70 opacity-70 hover:opacity-100"}
       `}
         >
             <img

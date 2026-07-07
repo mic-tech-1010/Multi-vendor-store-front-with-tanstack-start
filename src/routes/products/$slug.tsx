@@ -23,7 +23,7 @@ export const Route = createFileRoute(
     return {
       product: productQuery.data,
     };
-    
+
   },
 
   component: ProductDetailsPage,
@@ -33,10 +33,6 @@ function ProductDetailsPage() {
 
   const { product } =
     Route.useLoaderData();
-
-
-  // const navigate =
-  //   Route.useNavigate();
 
   const [selectedOptions, setSelectedOptions] =
     useState<Record<number, ProductAttributeValue>>(() => {
@@ -167,51 +163,51 @@ function ProductDetailsPage() {
   };
 
   return (
-    <main className="container mx-auto px-0 py-6">
+    <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+      <div className="mb-6 sm:mb-8">
+        <ProductDetailBreadcrumb product={product} />
+      </div>
 
-      <ProductDetailBreadcrumb product={product} />
-
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-
-        <div className="lg:col-span-6">
-          <ProductGallery
-            images={images}
-          />
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8 xl:gap-10">
+        <div className="lg:col-span-5 xl:col-span-7">
+          <ProductGallery images={images} />
         </div>
 
-        <div className="lg:col-span-4">
+        <div className="flex flex-col gap-6 lg:col-span-4 xl:col-span-3">
+          <div className="rounded-2xl border border-border/60 bg-card/80 p-4 shadow-sm sm:p-6">
+            <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-2xl">
+              {product.name}
+            </h1>
+          </div>
 
-          <h1 className="text-3xl font-semibold mb-4">
-            {product.name}
-          </h1>
-
-          <ProductVariationSelector
-            product={product}
-            selectedOptions={selectedOptions}
-            chooseOption={chooseOption}
-            setPreviewImages={setPreviewImages}
-          />
+          {product?.attributes?.length > 0 ?
+            (
+              <div className="rounded-2xl border border-border/60 bg-card/80 p-4 shadow-sm sm:p-6">
+                <ProductVariationSelector
+                  product={product}
+                  selectedOptions={selectedOptions}
+                  chooseOption={chooseOption}
+                  setPreviewImages={setPreviewImages}
+                />
+              </div>
+            ) : null
+          }
 
           <div
-            className="prose max-w-none dark:text-white!"
+            className="prose prose-sm max-w-none text-muted-foreground dark:prose-invert"
             dangerouslySetInnerHTML={{
-              __html: product.descriptionHtml
+              __html: product.descriptionHtml,
             }}
           />
-
         </div>
 
-        <div className="lg:col-span-2">
-
-          <ProductPriceCard
-            product={product}
-            selectedSku={selectedSku}
-          />
-
+        <div className="lg:col-span-3 xl:col-span-2">
+          <ProductPriceCard product={product} selectedSku={selectedSku} />
         </div>
-
+        
       </div>
 
     </main>
+
   );
 }

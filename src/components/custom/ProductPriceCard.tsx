@@ -23,6 +23,8 @@ export default function ProductPriceCard({
 
   const addToCartMutation = useAddToCartMutation();
 
+  const loading = addToCartMutation.isPending
+
   const [quantity, setQuantity] =
     useState(1);
 
@@ -48,33 +50,28 @@ export default function ProductPriceCard({
   };
 
   return (
-    <Card>
+    <Card className="border-border/60 bg-card/95 shadow-sm">
+      <CardContent className="space-y-4 p-5 sm:p-6">
+        <div className="space-y-2">
+          <div className="flex items-start gap-1">
+            <span className="mt-1 text-sm text-muted-foreground">
+              {currency.currencySymbol}
+            </span>
 
-      <CardContent className="space-y-4 pt-6">
+            <b className="text-3xl font-semibold tracking-tight text-foreground">
+              {currency.numericalValue}
+            </b>
+          </div>
 
-        <div className="flex gap-1 items-start">
-
-          <span className="text-xs mt-1">
-            {currency.currencySymbol}
-          </span>
-
-          <b className="text-2xl">
-            {currency.numericalValue}
-          </b>
-
+          <p className={stock > 0 ? 'text-sm font-medium text-emerald-600 dark:text-emerald-400' : 'text-sm font-medium text-muted-foreground'}>
+            {stock > 0 ? 'In Stock' : 'Out of Stock'}
+          </p>
         </div>
-
-        <p className="text-green-600">
-          {stock > 0
-            ? 'In Stock'
-            : 'Out of Stock'}
-        </p>
 
         {stock > 0 && (
           <>
             <NativeSelect
               value={quantity}
-
               onChange={(e) =>
                 setQuantity(
                   Number(e.target.value)
@@ -95,22 +92,21 @@ export default function ProductPriceCard({
 
             <Button
               onClick={handleAddToCart}
-              className="w-full"
+              className="w-full rounded-full"
+              disabled={loading}
             >
               Add To Cart
             </Button>
 
             <Button
               variant="secondary"
-              className="w-full"
+              className="w-full rounded-full"
             >
               Buy Now
             </Button>
           </>
         )}
-
       </CardContent>
-
     </Card>
   );
 }

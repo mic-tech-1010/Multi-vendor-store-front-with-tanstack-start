@@ -1,103 +1,241 @@
-// import React, { useState } from "react"
-// import { Link, router, useForm } from "@inertiajs/react"
-// import { CartItem as CartItemType } from "@/types"
-// import { Input } from "../ui/input"
-// import CurrencyFormatter from "../app/currency-formatter"
-// import ProductController from "@/actions/App/Http/Controllers/ProductController"
-// import { Separator } from "@/components/ui/separator"
-// import CartController from "@/actions/App/Http/Controllers/CartController"
-// import {
-//   Tooltip,
-//   TooltipContent,
-//   TooltipTrigger,
-// } from "@/components/ui/tooltip"
-// import { Button } from "../ui/button"
+import { useMemo } from "react"
+import { Link } from "@tanstack/react-router"
+import CurrencyFormatter from "@/components/CurrencyFormatter"
+import { Separator } from "@/components/ui/separator"
+import { Card, CardContent } from "@/components/ui/card"
+import { BookmarkPlus, Trash2, MinusIcon, PlusIcon } from "lucide-react"
+import type { CartItem as CartItemType } from "#/types"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { api } from "#/server/api"
+import { toast } from "sonner"
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { ButtonGroup, ButtonGroupText } from "@/components/ui/button-group"
 
-// function CartItem({ item }: { item: CartItemType }) {
+export interface ApiResponse {
+  message: string;
+}
 
-//   const deleteForm = useForm({ product_sku_id: item.product_sku_id });
+function CartItem({ cartItem }: { cartItem: CartItemType }) {
 
-//   const [error, setError] = useState('');
+  const queryClient = useQueryClient();
 
-//   const onDeleteClick = () => {
-//     deleteForm.delete(CartController.destroy(item.product_id).url, {
-//       preserveScroll: true
-//     })
-//   }
+  const [quantity, setQuantity] = useState(cartItem.quantity);
 
-//   const handleQuantityChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-//     setError('')
-//     router.put(CartController.update(item.product_id).url, {
-//       quantity: evt.target.value,
-//       product_sku_id: item.product_sku_id
-//     }, {
-//       preserveScroll: true,
-//       onError: (errors) => {
-//         setError(Object.values(errors)[0])
-//       }
-//     })
-//   };
+  const { mutateAsync: deleteCartItem, isPending: deleteIsPending } = useMutation({
+    mutationFn: async (itemId: number): Promise<ApiResponse> => {
+      return api(`/public/cart/items/${itemId}`, {
+        method: 'DELETE',
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] })
+    },
+  })
 
-//   return (
-//     <>
-//       <div className="flex gap-6 p-3">
-//         <Link href={ProductController.show(item.slug).url} className="w-32 min-w-32 min-h-32 flex justify-center self-start">
-//           <img src={item.image} alt="" className="max-w-full max-h-full" />
-//         </Link>
-//         <div className="flex-1 flex flex-col">
-//           <div className="flex-1">
-//             <h3 className="mb-3 text-sm font-semibold">
-//               <Link href={ProductController.show(item.slug).url}>
-//                 {item.title}
-//               </Link>
-//             </h3>
-//             <div className="text-xs">
-//               {item.options.map(option => (
-//                 <div key={option.id} className="flex gap-1">
-//                   <strong className="text-bold">
-//                     {option.type.name} :
-//                   </strong>
-//                   <span>{option.value}</span>
-//                 </div>
-//               ))}
-//             </div>
-//           </div>
-//           <div className="flex justify-between items-center mt-4">
-//             <div className="flex gap-2 items-center">
-//               <div className="text-sm">Quantity:</div>
-//               <Tooltip open={!!error}>
-//                 <TooltipTrigger>
-//                   <Input
-//                     type="number"
-//                     min={1}
-//                     defaultValue={item.quantity}
-//                     onBlur={handleQuantityChange} />
-//                 </TooltipTrigger>
-//                 {error && (
-//                   <TooltipContent side="top" className="text-red-500">
-//                     {error}
-//                   </TooltipContent>
-//                 )}
-//               </Tooltip>
+  const { mutateAsync: updateCartItem, isPending: updateIsPending } = useMutation({
+  mutationFn: async (params: { itemId: number; quantity: number }): Promise<ApiResponse> => {
+    return api(`/public/cart/items/${params.itemId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ quantity: params.quantity }),
+    });
+  },
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ["cart"] })
+  },
+})
 
-//             <Button variant={"ghost"} onClick={() => onDeleteClick()}>
-//                  Delete
-//             </Button>
+  const onDeleteClick = async () => {
 
-//             <Button variant={"ghost"}>
-//               Save for Later
-//             </Button>
+    const response = await deleteCartItem(cartItem.id)
 
-//               </div>
-//               <div className="font-bold text-lg">
-//                 {CurrencyFormatter(item.price * item.quantity).formatted}
-//               </div>
-//           </div>
-//         </div>
-//       </div>
-//       <Separator />
-//     </>
-//   )
-// }
+    toast.success(response?.message)
 
-// export default CartItem
+  }
+
+  const onQuantityChange = async (newQuantity: number) => {
+    const previousQuantity = quantity;
+
+    setQuantity(newQuantity);
+
+    try {
+     await updateCartItem({
+        itemId: cartItem.id,
+        quantity: newQuantity,
+      });
+
+    } catch (error) {
+      setQuantity(previousQuantity);
+      toast.error("Failed to update quantity");
+    }
+  };
+
+  const activeSku = useMemo(() => {
+    const selectedId = cartItem.productSkuId
+
+    const match = cartItem.product.skus.filter((sku) => sku.id === selectedId)
+
+    if (match.length > 0) {
+      return match[0]
+    }
+
+    return null
+  }, [cartItem.product.skus, cartItem.productSkuId])
+
+  const activeImage = useMemo(() => {
+    if (activeSku) {
+      const match = activeSku.attributeValues.filter(
+        (attr) => attr?.images && attr.images.length > 0,
+      )
+
+      if (match && match.length > 0) {
+        return match[0]?.images?.[0]
+      }
+    }
+
+    if (cartItem.product.images && cartItem.product.images.length > 0) {
+      return cartItem.product.images[0]
+    }
+
+    return null
+  }, [activeSku, cartItem.product.images])
+
+  const activeQuantity = useMemo(() => {
+    if (activeSku) {
+      return activeSku.quantity
+    }
+
+    return cartItem.product.quantity
+  }, [activeSku, cartItem.product.quantity])
+
+  return (
+    <>
+      <Card className="group overflow-hidden border-border/60 bg-card/95 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+        <CardContent className="p-0">
+
+          <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-start sm:p-5">
+            <Link
+              to="/"
+              className="flex h-32 w-full shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border/60 bg-muted/40 p-2 sm:h-36 sm:w-36"
+            >
+              <img
+                src={activeImage?.imageUrl}
+                alt={activeImage?.imageAltText || cartItem.product.name}
+                className="h-full w-full object-contain transition duration-200 group-hover:scale-[1.02]"
+              />
+            </Link>
+
+            <div className="flex min-w-0 flex-1 flex-col gap-4">
+              <div className="space-y-2">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <h3 className="text-base font-semibold text-foreground">
+                    <Link to="/" className="text-foreground! hover:text-foreground/80">
+                      {cartItem.product.name}
+                    </Link>
+                  </h3>
+                </div>
+
+                <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
+                  {activeSku?.attributeValues?.length ? (
+                    activeSku.attributeValues.map((value, index) => (
+                      <div
+                        key={value?.id ?? `variant-${index}`}
+                      >
+
+                        <span>
+                          {value?.productAttribute?.name}:
+                        </span>
+
+                        <span
+                          className="rounded-full bg-muted/70 px-2.5 py-1 font-medium text-foreground"
+                        >
+                          {value?.value}
+                        </span>
+
+                      </div>
+
+                    ))
+                  ) : (
+                    <span className="rounded-full bg-muted/70 px-2.5 py-1 text-muted-foreground">
+                      Standard option
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+                  <span className="rounded-full bg-emerald-500/10 px-2.5 py-1 font-medium text-emerald-600 dark:text-emerald-400">
+                    Qty {quantity}
+                  </span>
+                  <span>Unit price {CurrencyFormatter(cartItem.price).formatted}</span>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-2 border-t border-border/60 pt-4 md:flex-row md:items-start md:justify-between">
+                <div className="flex flex-wrap gap-2">
+
+                  <div>
+                    <ButtonGroup>
+                      <Button
+                        disabled={quantity <= 1 || updateIsPending}
+                        onClick={() => onQuantityChange(Math.max(1, quantity - 1))}
+                        size="sm"
+                        variant="outline"
+                      >
+                        <MinusIcon />
+                      </Button>
+                      <ButtonGroupText className="min-w-12 justify-center">
+                        {updateIsPending ? (
+                          <div className="h-4 w-4 animate-spin rounded-full border-2 border-muted-foreground/30 border-t-foreground" />
+                        ) : (
+                          quantity
+                        )}
+                      </ButtonGroupText>
+                      <Button
+                        disabled={quantity >= activeQuantity || updateIsPending}
+                        onClick={() => onQuantityChange(Math.min(activeQuantity, quantity + 1))}
+                        size="sm"
+                        variant="outline"
+                      >
+                        <PlusIcon />
+                      </Button>
+                    </ButtonGroup>
+                  </div>
+
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-9 rounded-full text-foreground hover:bg-muted/70 hover:text-foreground"
+                    onClick={() => onDeleteClick()}
+                    disabled={deleteIsPending || updateIsPending}
+                  >
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    {deleteIsPending ? "Removing..." : "Remove"}
+                  </Button>
+
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-9 rounded-full text-foreground hover:bg-muted/70 hover:text-foreground"
+                  >
+                    <BookmarkPlus className="mr-2 h-4 w-4" />
+                    Save for later
+                  </Button>
+                </div>
+
+                <div className="text-right text-base font-semibold text-foreground sm:text-lg nowrap!">
+                  {CurrencyFormatter(cartItem.price * quantity).formatted}
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card >
+      <Separator className="my-4" />
+    </>
+  )
+}
+
+export default CartItem

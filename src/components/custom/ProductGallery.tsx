@@ -1,4 +1,3 @@
-
 import Carousel from '#/components/custom/ProductDetailCarousel';
 
 export default function ProductGallery({

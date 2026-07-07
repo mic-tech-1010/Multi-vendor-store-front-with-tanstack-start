@@ -24,6 +24,10 @@ export interface Image {
 export type ProductAttributeValue = {
     id: number;
     value: string;
+    productAttribute?: {
+        id: number;
+        name: string;
+    };
     images?: Image[];
 }
 
@@ -102,14 +106,13 @@ export interface Section {
 
 export type CartItem = {
     id: number;
-    product_id: number;
-    title: string;
-    slug: string;
+    productId: number;
     price: number;
     quantity: number;
-    image: string;
-    product_sku_id: number | null;
+    productSkuId: number | null;
     options: ProductAttributeValue[];
+    product: Product;
+    skus: Sku[];
 }
 
 export type GroupedCartItem = {
