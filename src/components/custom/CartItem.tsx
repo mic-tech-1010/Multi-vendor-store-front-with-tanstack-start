@@ -5,49 +5,20 @@ import { Separator } from "@/components/ui/separator"
 import { Card, CardContent } from "@/components/ui/card"
 import { BookmarkPlus, Trash2, MinusIcon, PlusIcon } from "lucide-react"
 import type { CartItem as CartItemType } from "#/types"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { api } from "#/server/api"
 import { toast } from "sonner"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { ButtonGroup, ButtonGroupText } from "@/components/ui/button-group"
 
-export interface ApiResponse {
-  message: string;
-}
+import { useDeleteCartItemMutation, useUpdateCartItemMutation } from "#/hooks/useCart"
 
 function CartItem({ cartItem }: { cartItem: CartItemType }) {
 
-  const queryClient = useQueryClient();
-
   const [quantity, setQuantity] = useState(cartItem.quantity);
 
-  const { mutateAsync: deleteCartItem, isPending: deleteIsPending } = useMutation({
-    mutationFn: async (itemId: number): Promise<ApiResponse> => {
-      return api(`/public/cart/items/${itemId}`, {
-        method: 'DELETE',
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cart"] })
-    },
-  })
-
-  const { mutateAsync: updateCartItem, isPending: updateIsPending } = useMutation({
-  mutationFn: async (params: { itemId: number; quantity: number }): Promise<ApiResponse> => {
-    return api(`/public/cart/items/${params.itemId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ quantity: params.quantity }),
-    });
-  },
-  onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ["cart"] })
-  },
-})
-
+  const { mutateAsync: deleteCartItem, isPending: deleteIsPending } = useDeleteCartItemMutation();
+  const { mutateAsync: updateCartItem, isPending: updateIsPending } = useUpdateCartItemMutation();
+  
   const onDeleteClick = async () => {
 
     const response = await deleteCartItem(cartItem.id)
@@ -62,7 +33,7 @@ function CartItem({ cartItem }: { cartItem: CartItemType }) {
     setQuantity(newQuantity);
 
     try {
-     await updateCartItem({
+      await updateCartItem({
         itemId: cartItem.id,
         quantity: newQuantity,
       });

@@ -11,6 +11,7 @@ import ThemeToggle from './ThemeToggle';
 import { authClient } from '#/lib/auth-client';
 import { toast } from 'sonner';
 import { useCartQuery } from '#/hooks/useCart';
+import useSignOutMutation from '#/hooks/useAuth';
 
 const menuItems = [
     { label: "Today's Deals", href: "#" },
@@ -31,6 +32,7 @@ function Header() {
 
     const { data: session, isPending: loading } = authClient.useSession();
     const { data: cart, isLoading: isCartLoading } = useCartQuery();
+    const { mutateAsync: signOut } = useSignOutMutation();
 
     const itemCount = cart?.data?.itemCount ?? 0;
     return (
@@ -83,7 +85,7 @@ function Header() {
                                     {isTablet && (
                                         <Button
                                             variant="ghost"
-                                            onClick={() => (authClient.signOut(), toast.success("Signed out successfully"))}
+                                            onClick={() => (signOut(), toast.success("Signed out successfully"))}
                                             className="text-[14px] cursor-pointer text-white hover:underline"
                                         >
                                             <span className="text-[14px]">

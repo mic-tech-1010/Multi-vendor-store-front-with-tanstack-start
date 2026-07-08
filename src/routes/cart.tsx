@@ -11,6 +11,7 @@ import CurrencyFormatter from '@/components/CurrencyFormatter';
 import CartItem from '@/components/custom/CartItem';
 import { useCartQuery } from '@/hooks/useCart';
 import { useEffect, useState } from 'react';
+import { Link } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/cart')({
   component: RouteComponent,
@@ -18,7 +19,6 @@ export const Route = createFileRoute('/cart')({
 
 function RouteComponent() {
   const [mounted, setMounted] = useState(false);
-
 
   // this helps to keep server and client rendering in sync, preventing hydration errors
   useEffect(() => {
@@ -87,9 +87,11 @@ function RouteComponent() {
           {CurrencyFormatter(Number(data?.data.subtotal ?? 0)).formatted}
 
           <form action="" method="post">
-            <Button variant="default">
-              <CreditCardIcon />
-              Proceed to checkout
+            <Button variant="default" asChild>
+              <Link to="/checkout">
+                <CreditCardIcon />
+                Proceed to checkout
+              </Link>
             </Button>
           </form>
         </CardContent>

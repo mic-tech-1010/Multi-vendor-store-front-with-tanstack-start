@@ -1,40 +1,39 @@
 import { Button } from '#/components/ui/button';
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { useForm } from "@tanstack/react-form"
-import { toast } from "sonner"
 import * as z from "zod"
 import {
-  Card,
-  CardContent,
-//   CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardContent,
+    CardFooter,
+    CardHeader,
+    CardTitle,
 } from "@/components/ui/card"
 import {
-  Field,
-//   FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
+    Field,
+    FieldError,
+    FieldGroup,
+    FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { authClient } from '#/lib/auth-client';
+import { useLoginMutation } from '#/hooks/useAuth';
 
 const formSchema = z.object({
-  email: z
-    .string()
-    .email("Please enter a valid email address."),
-  password: z
-    .string()
-    .min(6, "Password must be at least 6 characters."),
+    email: z
+        .string()
+        .email("Please enter a valid email address."),
+    password: z
+        .string()
+        .min(6, "Password must be at least 6 characters."),
 })
 
 export const Route = createFileRoute('/login')({
     component: LoginComponent,
 })
 
- function LoginComponent() {
+function LoginComponent() {
+
+    const { mutateAsync: login, isPending: loginIsPending } = useLoginMutation();
 
     const form = useForm({
         defaultValues: {
@@ -45,107 +44,142 @@ export const Route = createFileRoute('/login')({
             onSubmit: formSchema,
         },
         onSubmit: async ({ value }) => {
-
-            await authClient.signIn.email(
-                {...value, callbackURL: '/' },
-                {
-                    onError: error => {
-                        toast.error(error.error.message || "failed to sign in")
-                    },
-                    onSuccess: async () => {
-                     await authClient.getSession();
-                     toast.success("Signed in successfully")
-
-                    }
-                }
-            )
+            await login({ email: value.email, password: value.password });
         },
     })
     return (
-        <Card className="w-full sm:max-w-md">
-            <CardHeader>
-                <CardTitle>Sign in or create account</CardTitle>
-                {/* <CardDescription>
-                    Help us improve by reporting bugs you encounter.
-                </CardDescription> */}
-            </CardHeader>
-            <CardContent>
-                <form
-                    id="login-form"
-                    onSubmit={(e) => {
-                        e.preventDefault()
-                        form.handleSubmit()
-                    }}
-                >
-                    <FieldGroup>
+        <div className="flex min-h-screen items-center justify-center bg-background px-4 py-8 sm:px-6 lg:px-8">
+            <div className="grid w-full max-w-6xl overflow-hidden rounded-4xl border border-border/60 bg-card/80 shadow-2xl backdrop-blur-xl lg:grid-cols-[1.05fr_0.95fr]">
+                <div className="flex flex-col justify-center bg-linear-to-br from-primary/20 via-primary/10 to-accent/10 p-6 sm:p-8 lg:p-10">
+                    <div className="mb-6 inline-flex w-fit items-center rounded-full border border-primary/30 bg-primary/10 dark:bg-primary px-3 py-1 text-sm font-medium text-primary dark:text-foreground">
+                        Welcome back
+                    </div>
+                    <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+                        Sign in to your account
+                    </h1>
+                    <p className="mt-3 max-w-lg text-sm leading-6 text-muted-foreground sm:text-base">
+                        Shop faster, save favorites, and keep your orders in one place.
+                    </p>
 
-                        <form.Field
-                            name="email"
-                            children={(field) => {
-                                const isInvalid =
-                                    field.state.meta.isTouched && !field.state.meta.isValid
-                                return (
-                                    <Field data-invalid={isInvalid}>
-                                        <FieldLabel htmlFor={field.name}>Enter mobile number or email</FieldLabel>
-                                        <Input
-                                            id={field.name}
-                                            name={field.name}
-                                            value={field.state.value}
-                                            onBlur={field.handleBlur}
-                                            onChange={(e) => field.handleChange(e.target.value)}
-                                            aria-invalid={isInvalid}
-                                            placeholder="Enter your email"
-                                            autoComplete="off"
-                                        />
-                                        {isInvalid && (
-                                            <FieldError errors={field.state.meta.errors} />
-                                        )}
-                                    </Field>
+                    <div className="mt-8 hidden space-y-3 lg:block">
+                        <div className="rounded-2xl border border-border/60 bg-background/70 p-3 text-sm text-foreground">
+                            <span className="font-medium">Fast checkout</span>
+                            <p className="mt-1 text-muted-foreground">Pick up where you left off with your saved carts.</p>
+                        </div>
+                        <div className="rounded-2xl border border-border/60 bg-background/70 p-3 text-sm text-foreground">
+                            <span className="font-medium">Personalized experience</span>
+                            <p className="mt-1 text-muted-foreground">Get recommendations and order updates tailored to you.</p>
+                        </div>
+                    </div>
+                </div>
 
-                                )
-                            }}
-                        />
+                <div className="p-4 sm:p-6 lg:p-8">
+                    <Card className="border-0 bg-transparent shadow-none">
+                        <CardHeader className="px-0 pb-6">
+                            <CardTitle className="">Enter your details to continue</CardTitle>
+                        </CardHeader>
+                        <CardContent className="px-0">
+                            <form
+                                id="login-form"
+                                onSubmit={(e) => {
+                                    e.preventDefault()
+                                    form.handleSubmit()
+                                }}
+                            >
+                                <FieldGroup className="space-y-4">
+                                    <form.Field
+                                        name="email"
+                                        children={(field) => {
+                                            const isInvalid =
+                                                field.state.meta.isTouched && !field.state.meta.isValid
+                                            return (
+                                                <Field data-invalid={isInvalid}>
+                                                    <FieldLabel htmlFor={field.name} className="text-sm font-medium text-foreground">
+                                                        Email address
+                                                    </FieldLabel>
+                                                    <Input
+                                                        id={field.name}
+                                                        name={field.name}
+                                                        value={field.state.value}
+                                                        onBlur={field.handleBlur}
+                                                        onChange={(e) => field.handleChange(e.target.value)}
+                                                        aria-invalid={isInvalid}
+                                                        placeholder="Enter your email"
+                                                        autoComplete="off"
+                                                        className="h-11 rounded-xl border-border/60 bg-background/70 px-4 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary/20"
+                                                    />
+                                                    {isInvalid && (
+                                                        <FieldError errors={field.state.meta.errors} />
+                                                    )}
+                                                </Field>
+                                            )
+                                        }}
+                                    />
 
-                         <form.Field
-                            name="password"
-                            children={(field) => {
-                                const isInvalid =
-                                    field.state.meta.isTouched && !field.state.meta.isValid
-                                return (
-                                    <Field data-invalid={isInvalid}>
-                                        <FieldLabel htmlFor={field.name}>Enter your password</FieldLabel>
-                                        <Input
-                                            id={field.name}
-                                            name={field.name}
-                                            value={field.state.value}
-                                            onBlur={field.handleBlur}
-                                            onChange={(e) => field.handleChange(e.target.value)}
-                                            aria-invalid={isInvalid}
-                                            placeholder="password"
-                                            autoComplete="off"
-                                        />
-                                        {isInvalid && (
-                                            <FieldError errors={field.state.meta.errors} />
-                                        )}
-                                    </Field>
-                                    
-                                )
-                            }}
-                        />
-                    </FieldGroup>
-                </form>
-            </CardContent>
-            <CardFooter>
-                <Field orientation="horizontal">
-                    <Button type="button" variant="outline" onClick={() => form.reset()}>
-                        Reset
-                    </Button>
-                    <Button type="submit" form="login-form">
-                        Submit
-                    </Button>
-                </Field>
-            </CardFooter>
-        </Card>
+                                    <form.Field
+                                        name="password"
+                                        children={(field) => {
+                                            const isInvalid =
+                                                field.state.meta.isTouched && !field.state.meta.isValid
+                                            return (
+                                                <Field data-invalid={isInvalid}>
+                                                    <FieldLabel htmlFor={field.name} className="text-sm font-medium text-foreground">
+                                                        Password
+                                                    </FieldLabel>
+                                                    <Input
+                                                        id={field.name}
+                                                        name={field.name}
+                                                        value={field.state.value}
+                                                        onBlur={field.handleBlur}
+                                                        onChange={(e) => field.handleChange(e.target.value)}
+                                                        aria-invalid={isInvalid}
+                                                        placeholder="Enter your password"
+                                                        autoComplete="off"
+                                                        className="h-11 rounded-xl border-border/60 bg-background/70 px-4 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary/20"
+                                                    />
+                                                    {isInvalid && (
+                                                        <FieldError errors={field.state.meta.errors} />
+                                                    )}
+                                                </Field>
+                                            )
+                                        }}
+                                    />
+                                </FieldGroup>
+                            </form>
+                        </CardContent>
+                        <CardFooter className="flex-col items-stretch gap-4 px-0 pt-2">
+                            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    className="h-11 w-full rounded-xl border-border bg-background/70 text-foreground hover:bg-accent/40 sm:w-auto"
+                                    onClick={() => form.reset()}
+                                >
+                                    Reset
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    form="login-form"
+                                    className="h-11 w-full rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 sm:w-auto"
+                                >
+                                    {loginIsPending ? (
+                                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" />
+                                    ) : (
+                                        "Sign in"
+                                    )}
+                                </Button>
+                            </div>
 
+                            <p className="text-center text-sm text-muted-foreground sm:text-left">
+                                Don&apos;t have an account?{' '}
+                                <Link to="/signup" className="font-medium text-foreground! transition hover:text-foreground/80">
+                                    Sign up
+                                </Link>
+                            </p>
+                        </CardFooter>
+                    </Card>
+                </div>
+            </div>
+        </div>
     );
 }
