@@ -1,160 +1,115 @@
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuPortal,
-    DropdownMenuSeparator,
-    DropdownMenuShortcut,
-    DropdownMenuSub,
-    DropdownMenuSubContent,
-    DropdownMenuSubTrigger,
-    DropdownMenuTrigger,
-    DropdownMenuArrow,
-} from "@/components/ui/dropdown-menu"
-import { ChevronDown } from 'lucide-react'
-import { useState } from "react"
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+  HoverCardArrow,
+} from "@/components/ui/hover-card";
+import { ChevronDown } from "lucide-react";
 
 function LocationTab() {
-    const [open, setOpen] = useState(false)
-
-    return (
-        <DropdownMenu open={open} onOpenChange={setOpen} modal>
-            <div
-                onMouseEnter={() => setOpen(true)}
-                onMouseLeave={() => setOpen(false)}
-                className="relative ml-3"
+  return (
+    <HoverCard openDelay={150} closeDelay={150}>
+      <HoverCardTrigger asChild>
+        <div className="relative ml-3 cursor-pointer">
+          <div className="flex items-end gap-0.5 justify-between text-nav-color hover:outline-solid! hover:outline-offset-3! hover:outline-white! hover:outline-1">
+            <a
+              href=""
+              className="flex gap-0.5"
+              aria-label="Choose a language for shopping in Amazon United States. The current selection is English (EN)."
             >
-                <div className='flex items-end gap-0.5 justify-between text-nav-color hover:outline-solid! hover:outline-offset-3! hover:outline-white! hover:outline-1'>
-                    <a
-                        href=""
-                        className="flex gap-0.5"
-                        aria-label="Choose a language for shopping in Amazon United States. The current selection is English (EN)."
-                    >
-                        <img
-                            src="images/us_flag.png"
-                            className="w-6 h-auto"
-                            alt="United States"
-                        />
+              <img
+                src="images/us_flag.png"
+                className="w-6 h-auto"
+                alt="United States"
+              />
 
-                        <span>EN</span>
-                    </a>
+              <span>EN</span>
+            </a>
 
-                    <DropdownMenuTrigger asChild>
-                        <button className='bg-transparent text-white cursor-pointer pr-0.5'>
-                            <ChevronDown strokeWidth={3} size={18} />
-                        </button>
-                    </DropdownMenuTrigger>
-                </div>
+            <button
+              type="button"
+              className="bg-transparent text-white cursor-pointer pr-0.5"
+              aria-label="Expand language menu"
+            >
+              <ChevronDown strokeWidth={3} size={18} />
+            </button>
+          </div>
+        </div>
+      </HoverCardTrigger>
 
-                <DropdownMenuContent
-                    className="w-56 rounded-none bg-popover text-popover-foreground border-border"
-                    align="start"
-                >
-                    <DropdownMenuArrow className="fill-popover" />
+      <HoverCardContent
+        side="bottom"
+        align="start"
+        sideOffset={2}
+        className="w-56 rounded-none border-border bg-popover p-1 text-popover-foreground"
+      >
+        <HoverCardArrow className="fill-popover" />
 
-                    <DropdownMenuLabel className="text-foreground">
-                        My Account
-                    </DropdownMenuLabel>
+        <div className="px-2 py-1.5 text-sm font-medium">
+          My Account
+        </div>
 
-                    <DropdownMenuGroup>
-                        <DropdownMenuItem className="focus:bg-muted focus:text-foreground">
-                            Profile
-                            <DropdownMenuShortcut>
-                                ⇧⌘P
-                            </DropdownMenuShortcut>
-                        </DropdownMenuItem>
+        <div className="my-1 h-px bg-border" />
 
-                        <DropdownMenuItem className="focus:bg-muted focus:text-foreground">
-                            Billing
-                            <DropdownMenuShortcut>
-                                ⌘B
-                            </DropdownMenuShortcut>
-                        </DropdownMenuItem>
+        {[
+          ["Profile", "⇧⌘P"],
+          ["Billing", "⌘B"],
+          ["Settings", "⌘S"],
+          ["Keyboard shortcuts", "⌘K"],
+        ].map(([label, shortcut]) => (
+          <button
+            key={label}
+            className="flex w-full items-center rounded-sm px-2 py-1.5 text-sm hover:bg-muted"
+          >
+            <span>{label}</span>
 
-                        <DropdownMenuItem className="focus:bg-muted focus:text-foreground">
-                            Settings
-                            <DropdownMenuShortcut>
-                                ⌘S
-                            </DropdownMenuShortcut>
-                        </DropdownMenuItem>
+            <span className="ml-auto text-xs tracking-widest text-muted-foreground">
+              {shortcut}
+            </span>
+          </button>
+        ))}
 
-                        <DropdownMenuItem className="focus:bg-muted focus:text-foreground">
-                            Keyboard shortcuts
-                            <DropdownMenuShortcut>
-                                ⌘K
-                            </DropdownMenuShortcut>
-                        </DropdownMenuItem>
-                    </DropdownMenuGroup>
+        <div className="my-1 h-px bg-border" />
 
-                    <DropdownMenuSeparator className="bg-border" />
+        <button className="flex w-full rounded-sm px-2 py-1.5 text-sm hover:bg-muted">
+          Team
+        </button>
 
-                    <DropdownMenuGroup>
-                        <DropdownMenuItem className="focus:bg-muted focus:text-foreground">
-                            Team
-                        </DropdownMenuItem>
+        <button className="flex w-full rounded-sm px-2 py-1.5 text-sm hover:bg-muted">
+          Invite users
+        </button>
 
-                        <DropdownMenuSub>
-                            <DropdownMenuSubTrigger className="focus:bg-muted focus:text-foreground">
-                                Invite users
-                            </DropdownMenuSubTrigger>
+        <button className="flex w-full rounded-sm px-2 py-1.5 text-sm hover:bg-muted">
+          New Team
 
-                            <DropdownMenuPortal>
-                                <DropdownMenuSubContent className="bg-popover text-popover-foreground border-border">
-                                    <DropdownMenuItem className="focus:bg-muted focus:text-foreground">
-                                        Email
-                                    </DropdownMenuItem>
+          <span className="ml-auto text-xs tracking-widest text-muted-foreground">
+            ⌘T
+          </span>
+        </button>
 
-                                    <DropdownMenuItem className="focus:bg-muted focus:text-foreground">
-                                        Message
-                                    </DropdownMenuItem>
+        <div className="my-1 h-px bg-border" />
 
-                                    <DropdownMenuSeparator className="bg-border" />
+        {["GitHub", "Support", "API"].map((item) => (
+          <button
+            key={item}
+            className="flex w-full rounded-sm px-2 py-1.5 text-sm hover:bg-muted"
+          >
+            {item}
+          </button>
+        ))}
 
-                                    <DropdownMenuItem className="focus:bg-muted focus:text-foreground">
-                                        More...
-                                    </DropdownMenuItem>
-                                </DropdownMenuSubContent>
-                            </DropdownMenuPortal>
-                        </DropdownMenuSub>
+        <div className="my-1 h-px bg-border" />
 
-                        <DropdownMenuItem className="focus:bg-muted focus:text-foreground">
-                            New Team
+        <button className="flex w-full rounded-sm px-2 py-1.5 text-sm hover:bg-muted">
+          Log out
 
-                            <DropdownMenuShortcut>
-                                ⌘+T
-                            </DropdownMenuShortcut>
-                        </DropdownMenuItem>
-                    </DropdownMenuGroup>
-
-                    <DropdownMenuSeparator className="bg-border" />
-
-                    <DropdownMenuItem className="focus:bg-muted focus:text-foreground">
-                        GitHub
-                    </DropdownMenuItem>
-
-                    <DropdownMenuItem className="focus:bg-muted focus:text-foreground">
-                        Support
-                    </DropdownMenuItem>
-
-                    <DropdownMenuItem disabled>
-                        API
-                    </DropdownMenuItem>
-
-                    <DropdownMenuSeparator className="bg-border" />
-
-                    <DropdownMenuItem className="focus:bg-muted focus:text-foreground">
-                        Log out
-
-                        <DropdownMenuShortcut>
-                            ⇧⌘Q
-                        </DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                </DropdownMenuContent>
-            </div>
-        </DropdownMenu>
-    )
+          <span className="ml-auto text-xs tracking-widest text-muted-foreground">
+            ⇧⌘Q
+          </span>
+        </button>
+      </HoverCardContent>
+    </HoverCard>
+  );
 }
 
-export default LocationTab
+export default LocationTab;

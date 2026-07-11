@@ -8,10 +8,10 @@ import HamburgerMenu from '@/components/custom/HamburgerMenu';
 import { ChevronRight, ShoppingCart, User } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
 import ThemeToggle from './ThemeToggle';
-import { authClient } from '#/lib/auth-client';
 import { toast } from 'sonner';
 import { useCartQuery } from '#/hooks/useCart';
 import useSignOutMutation from '#/hooks/useAuth';
+import type { UserSession } from '#/server/getCurrentSession';
 
 const menuItems = [
     { label: "Today's Deals", href: "#" },
@@ -26,11 +26,10 @@ const menuItems = [
     { label: "Prime", href: "#" },
 ];
 
-function Header() {
+function Header({session}: {session: UserSession}) {
     const isTablet = useMediaQuery("(min-width: 760px)")
     const isDesktop = useMediaQuery("(min-width: 1024px)")
 
-    const { data: session, isPending: loading } = authClient.useSession();
     const { data: cart, isLoading: isCartLoading } = useCartQuery();
     const { mutateAsync: signOut } = useSignOutMutation();
 
@@ -101,7 +100,7 @@ function Header() {
                                 (
 
                                     <Link
-                                        to="/login"
+                                        to={session?.user ? "/account" : "/login"}
                                         className="flex items-start text-foreground"
                                         aria-label="sign in to your account"
                                     >
@@ -118,7 +117,7 @@ function Header() {
 
                                 )
                         ) : (
-                            <AccountTab />
+                            <AccountTab session={session} />
                         )}
 
 
@@ -153,9 +152,6 @@ function Header() {
                                 )}
                             </div>
 
-                            <span className='w-3.75 font-bold hidden xl:inline'>
-                                Cart
-                            </span>
                         </Link>
 
                         {/** end cart */}
