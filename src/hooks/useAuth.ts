@@ -2,6 +2,7 @@ import { authClient } from "#/lib/auth-client";
 import { mergeCart } from "#/server/cart";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useRouter } from '@tanstack/react-router'
 
 export function useLoginMutation() {
 
@@ -85,9 +86,21 @@ export default function useSignOutMutation() {
 
     const queryClient = useQueryClient();
 
+    const router = useRouter()
+
     return useMutation({
         mutationFn: async () => {
-            return await authClient.signOut()
+            return await authClient.signOut({
+                fetchOptions: {
+                    onSuccess: () => {
+                        toast.success("Signed out successfully");
+                        router.navigate({ to: '/login' })
+                    },
+                    onError: (ctx) => {
+                        toast.error(ctx.error.message || 'sign out failed')
+                    }
+                },
+            })
         },
         onSuccess: async () => {
             await queryClient.invalidateQueries({

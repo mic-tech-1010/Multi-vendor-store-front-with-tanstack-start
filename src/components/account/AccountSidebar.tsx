@@ -61,9 +61,6 @@ export function AccountSidebar({ user }: AccountSidebarProps) {
                     ? "bg-accent text-accent-foreground"
                     : "text-foreground hover:bg-accent hover:text-accent-foreground"
                 )}
-                activeProps={{
-                  className: "bg-accent text-foreground",
-                }}
               >
                 <Icon className="h-4 w-4 shrink-0" />
                 <span>{item.label}</span>

@@ -8,7 +8,6 @@ import HamburgerMenu from '@/components/custom/HamburgerMenu';
 import { ChevronRight, ShoppingCart, User } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
 import ThemeToggle from './ThemeToggle';
-import { toast } from 'sonner';
 import { useCartQuery } from '#/hooks/useCart';
 import useSignOutMutation from '#/hooks/useAuth';
 import type { UserSession } from '#/server/getCurrentSession';
@@ -84,7 +83,7 @@ function Header({session}: {session: UserSession}) {
                                     {isTablet && (
                                         <Button
                                             variant="ghost"
-                                            onClick={() => (signOut(), toast.success("Signed out successfully"))}
+                                            onClick={() => (signOut())}
                                             className="text-[14px] cursor-pointer text-white hover:underline"
                                         >
                                             <span className="text-[14px]">

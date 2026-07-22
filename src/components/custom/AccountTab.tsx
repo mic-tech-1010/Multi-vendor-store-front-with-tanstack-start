@@ -14,12 +14,12 @@ import { ChevronDown, UserCircle2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { Link } from "@tanstack/react-router";
-import { authClient } from "#/lib/auth-client";
-import { toast } from "sonner";
 import type { UserSession } from "#/server/getCurrentSession";
+import useSignOutMutation from "#/hooks/useAuth";
 
 function AccountTab({ session }: { session: UserSession }) {
     const accountRoute = session?.user ? "/account" : "/login";
+    const { mutateAsync: signOut } = useSignOutMutation();
 
     return (
         <HoverCard openDelay={150} closeDelay={150}>
@@ -97,10 +97,7 @@ function AccountTab({ session }: { session: UserSession }) {
                                 <Button
                                     variant="outline"
                                     className="cursor-pointer"
-                                    onClick={async () => {
-                                        await authClient.signOut();
-                                        toast.success("Signed out successfully");
-                                    }}
+                                    onClick={async () => signOut()}
                                 >
                                     Sign Out
                                 </Button>
@@ -122,7 +119,7 @@ function AccountTab({ session }: { session: UserSession }) {
                             New customer?{" "}
                             <Link
                                 to="/signup"
-                                className="hover:underline"
+                                className="hover:underline text-foreground!"
                             >
                                 Start here
                             </Link>
